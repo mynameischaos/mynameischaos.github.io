@@ -1,0 +1,391 @@
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <meta name="author" content="zhonghuasong">
+  
+  
+  
+  
+    <meta name="description" content="书名：《机器学习》
+作者： 周志华
+第二章 模型评估与选择2.1 经验误差与过拟合
+错误率， 精度，误差，误差期望， 训练误差(经验误差)， 泛化误差， 测试误差
+
+过拟合： 学习器把训练样本学得“太好了”的时候， 很可能已经把训练样本自身的特点当作了所有潜在样本都会具有的一般性质， 这样就会导致泛化能力性能下降。 这种现象在机器学习中称为“过拟合”， 也称为“过配”。 
+原因：最常见的情况...">
+  
+  <title>机器学习——读书笔记2 [ 清水汪汪 ]</title>
+  
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="/css/random.css">
+<link rel="stylesheet" href="/css/vegas.min.css">
+<link rel="stylesheet" href="/css/highlight-railscasts.css">
+<link rel="stylesheet" href="/css/jquery.fancybox.css">
+<link rel="stylesheet" href="/css/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/jquery.fancybox-thumbs.css">
+<link rel="stylesheet" href="/css/plyr.css">
+  
+</head>
+
+<body>
+<div class="side-navigate hide-area">
+  
+    <div class="item prev">
+      <a href="/2016/10/15/Mac下安装MacPorts/">
+        <div class="item-icon"></div>
+      </a>
+      <div class="item-title">
+        Mac下安装MacPorts
+      </div>
+    </div>
+  
+  
+    <div class="item next">
+      <a href="/2016/10/13/machine_learning(1)/">
+        <div class="item-icon"></div>
+      </a>
+      <div class="item-title">
+        机器学习——读书笔记1
+      </div>
+    </div>
+  
+</div>
+<div id="outer-container" class="hide-area">
+<div id="container">
+  <div id="menu-outer" class="slide-down">
+    <div id="menu-inner">
+      <div id="brand">
+        
+        <a onClick="openUserCard()">
+          <img id="avatar" src="/image/dog.jpg"/>
+          <div id="homelink">清水汪汪</div>
+        </a>
+      </div>
+      <div id="menu-list">
+        <ul>
+        
+        
+          
+            <li>
+          
+            <a href="/">首页</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/archives">文章</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/tags">标签</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/categories">分类</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/links">友链</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/about">关于</a>
+            
+          </li>
+        
+        </ul>
+      </div>
+      <div id="show-menu">
+        <button>Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="content-outer">
+    <div id="content-inner">
+      
+      
+  <article id="post">
+    <h1>机器学习——读书笔记2</h1>
+    <p class="page-title-sub">
+      <span id = "post-title-date">撰写于 2016-10-13</span>
+      
+        <span id = "post-title-updated">修改于 2016-10-17</span>
+      
+      
+      <span id = "post-title-categories">分类
+      
+      
+        
+        
+        <a href="/categories/machine-learning/">machine learning</a>
+      
+      </span>
+      
+      
+      <span id = "post-title-tags">
+      标签
+      
+      
+        
+        
+        <a href="/tags/machine-learning/">machine learning</a>
+      
+      </span>
+      
+    </p>
+    
+    <p>书名：《机器学习》</p>
+<p>作者： 周志华</p>
+<h3 id="第二章-模型评估与选择"><a href="#第二章-模型评估与选择" class="headerlink" title="第二章 模型评估与选择"></a>第二章 模型评估与选择</h3><h4 id="2-1-经验误差与过拟合"><a href="#2-1-经验误差与过拟合" class="headerlink" title="2.1 经验误差与过拟合"></a>2.1 经验误差与过拟合</h4><blockquote>
+<p>错误率， 精度，误差，误差期望， 训练误差(经验误差)， 泛化误差， 测试误差</p>
+</blockquote>
+<p><strong>过拟合：</strong> 学习器把训练样本学得“太好了”的时候， 很可能已经把训练样本自身的特点当作了所有潜在样本都会具有的一般性质， 这样就会导致<strong>泛化能力</strong>性能下降。 这种现象在机器学习中称为“过拟合”， 也称为“过配”。 </p>
+<p><strong>原因：</strong>最常见的情况是由于学习能力过于强大，以至于把训练样本所包含的不太一般的特性都学到了。 过拟合比较麻烦， 过拟合是机器学习面临的关键障碍，无法彻底避免的， 所能做的只是“缓解”。</p>
+<p><strong>欠拟合：</strong> 对训练样本的一般性质尚未学好， 欠拟合也称为“欠配”。 </p>
+<p><strong>原因：</strong> 通常是由于学习能力低下而造成的。 欠拟合比较容易克服， 例如神经网络中增加训练轮数。</p>
+<p><strong>说明：</strong> 学习能力是否“过于强大”， 是由学习算法和数据内涵共同决定的。</p>
+<h4 id="2-2-评估方法"><a href="#2-2-评估方法" class="headerlink" title="2.2 评估方法"></a>2.2 评估方法</h4><p>选择合适的学习算法和适当的参数配置的问题在机器学习中叫做<strong>“模型选择”</strong>问题。理想的解决方案是对候选模型的泛化误差进行评估，然后选择泛化误差最小的那个模型。然后无法直接获得泛化误差，而训练误差又由于过拟合现象的存在而不适合作为标准， 所以需要一些<strong>评估方法</strong>。</p>
+<p>一般要求测试集和训练集应该是互斥的。然而如何将一个数据集分为训练集和测试集呢？</p>
+<h5 id="2-2-1-留出法"><a href="#2-2-1-留出法" class="headerlink" title="2.2.1 留出法"></a>2.2.1 留出法</h5><p><strong>“留出法”(hold-out)</strong>直接将数据集D划分为两个互斥的集和。</p>
+<p>训练／测试集的划分要尽可能保持数据<strong>分布的一致性</strong>， 避免因数据划分过程引入额外的偏差而对最终结果产生影响。 如果从<strong>采样</strong>的角度来看待数据集的划分过程， 则保留类别比列的采样方式通常称为<strong>“分层采样”</strong>。</p>
+<p>通常的做法是将大约<strong>2/3~4/5</strong>的样本用于训练， 剩余样本用于测试。</p>
+<h5 id="2-2-2-交叉验证法"><a href="#2-2-2-交叉验证法" class="headerlink" title="2.2.2 交叉验证法"></a>2.2.2 交叉验证法</h5><p><strong>“交叉验证法”(cross validation)</strong>先将数据集D划分为k个大小相似的互斥子集， 每个子集都尽可能保持数据分布的一致性， 也就是从D中通过<strong>分层采样</strong>得到。 然后每次选k－1个子集的并集作为训练集， 剩余的那个子集作为测试集， 这样就可以得到k组训练／测试集。然后进行<strong>k次</strong>训练和测试， 最终返回的是k个测试结果的<strong>均值</strong>。</p>
+<p>显然， 交叉验证法评估结果的稳定性和保真性在很大程度上取决于k的取值。通常交叉验证法又称为<strong>“k折(倍)交叉验证”(k-fold cross validation)</strong>。k通常的取值是10、5、20。</p>
+<p>对数据集D划分为k个子集有多种不同的划分。 为减少因样本划分不同而引入的误差， k折交叉验证通常要随机使用不同的划分重复p次， 最终的评估结果是<strong>p次k折交叉验证结果的均值</strong>。 例如常见的有“10次10折交叉验证”。</p>
+<p><strong>留一法(Leave-One-Out, 简称LOO)</strong>， 每一个样本作为一个子集。 也就是训练集比数据集少了一个样本，结果一般认为比较准备。 但是数据量大的时候缺陷比较明显。</p>
+<h5 id="2-2-3-自助法"><a href="#2-2-3-自助法" class="headerlink" title="2.2.3 自助法"></a>2.2.3 自助法</h5><p>“自助法”就是有放回的进行采样得到一个包含m个样本的训练集D｀。 样本在m次采样始终不被采到的概率是(1 - 1 / m) ^m, 取极限就等于 1/e=0.368, 也就是数据集D中有大约36.8%的样本未出现在采样数据集D｀中的。 于是我们将D｀用作训练集， D － D｀用作测试集； 这样， 实际评估的模型与期望评估的模型都使用m个训练样本， 而我们仍有数据总量约1/3的、没有在训练集中出现的样本用于测试。 这样的测试结果， 也称为<strong>“包外估计”(out-of-bag estimate)</strong>。</p>
+<p>自助法在数据量小、难以有效划分训练／测试集时很有用。此外， 自助法能从初识数据中产生多个不同的训练集， 这对集成学习等方法有很大的好处。 然而， 自助产生的数据改变了初识数据集的分布， 这会引入估值偏差。 因此， 数据量足够时， 留出法和交叉验证更为常用一些。</p>
+<h5 id="2-2-4-调参与最终模型"><a href="#2-2-4-调参与最终模型" class="headerlink" title="2.2.4 调参与最终模型"></a>2.2.4 调参与最终模型</h5><p>在进行模型评估与选择时， 除了要对适用学习算法进行选择， 还需要对算法参数进行设定， 这就是通常所说的“参数调节”或者简称“调参”(parameter tuning)。</p>
+<p><strong>注：</strong> 机器学习中通常涉及两种参数调节：一类是<strong>算法的参数</strong>， 亦称“超参数”， 数目常在10以内； 另一类是<strong>模型的参数</strong>， 数据可能很多， 例如深度学习模型。 两者调参方式相似， 均是产生多个模型之后基于某种评估方法进行选择；不同之处在于前者通常是由人工设定多个参数后选值产生模型， 后者则是通过学习来产生多个候选模型（例如神经网络在不同轮数停止训练后得到的模型）。</p>
+<h4 id="2-3-性能度量"><a href="#2-3-性能度量" class="headerlink" title="2.3 性能度量"></a>2.3 性能度量</h4>
+  </article>
+  <div class="random-toc-area">
+  <button class="btn-hide-toc btn-hide-toc-show" style="display: none" onclick="TOCToggle()">显示目录</button>
+  <button class="btn-hide-toc btn-hide-toc-hide" onclick="TOCToggle()">隐藏目录</button>
+  <div class="random-toc">
+    <h2>目录</h2>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#第二章-模型评估与选择"><span class="toc-text">第二章 模型评估与选择</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-经验误差与过拟合"><span class="toc-text">2.1 经验误差与过拟合</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-评估方法"><span class="toc-text">2.2 评估方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-1-留出法"><span class="toc-text">2.2.1 留出法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-2-交叉验证法"><span class="toc-text">2.2.2 交叉验证法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-3-自助法"><span class="toc-text">2.2.3 自助法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-4-调参与最终模型"><span class="toc-text">2.2.4 调参与最终模型</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-性能度量"><span class="toc-text">2.3 性能度量</span></a></li></ol></li></ol>
+  </div>
+</div>
+
+  
+<nav id="pagination">
+  
+    <a href="/2016/10/15/Mac下安装MacPorts/" class="prev">&larr; 上一篇 Mac下安装MacPorts</a>
+  
+
+  
+
+  
+    <a href="/2016/10/13/machine_learning(1)/" class="next">下一篇 机器学习——读书笔记1 &rarr;</a>
+  
+</nav>
+
+  <!-- JiaThis Button BEGIN -->
+
+<!-- JiaThis Button END -->
+
+
+      
+      <div class="ds-thread" data-thread-key="2016/10/13/machine_learning(2)/" data-title="机器学习——读书笔记2" data-url="http://yoursite.com/2016/10/13/machine_learning(2)/"></div>
+      
+      
+      
+    </div>
+  </div>
+
+  <div id="bottom-outer">
+    <div id="bottom-inner">
+      Site by zhonghuasong using
+      <a href="http://hexo.io">Hexo</a> 
+      <br>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  <script type="text/javascript">
+var duoshuoQuery = {short_name:"mynameischaos"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+   || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+<div id="user-card">
+  <div class="center-field">
+    <img class="avatar" src="/image/dog.jpg">
+    <p id="description">慢慢来比较快</p>
+    <ul class="social-icon">
+  
+  
+    <li>
+      <a href="https://github.com/mynameischaos">
+        
+          <i class="icon iconfont github">&#xe606;</i>
+        
+      </a>
+    </li>
+  
+</ul>
+  </div>
+</div>
+
+
+<div id="btn-view">Hide</div>
+
+<script>
+// is trigger analytics / tongji script
+var isIgnoreHost = false;
+
+if(window && window.location && window.location.host) {
+  isIgnoreHost = ["localhost","127.0.0.1"].some(function(address){
+    return 0 === window.location.host.indexOf(address);
+  });
+}
+
+var isTriggerAnalytics = !( true && isIgnoreHost );
+
+</script>
+
+  <script>
+if(isTriggerAnalytics) {
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?7a290d9537f12cac590017345eb137b4";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+}
+</script>
+
+
+
+
+
+  
+  
+    <script src="/js/jquery-2.2.3.min.js"></script>
+  
+    <script src="/js/vegas.min.js"></script>
+  
+    <script src="/js/random.js"></script>
+  
+    <script src="/js/highlight.pack.js"></script>
+  
+    <script src="/js/jquery.mousewheel.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox-thumbs.js"></script>
+  
+    <script src="/js/plyr.js"></script>
+  
+
+<script>
+
+  // fancybox
+  var backgroundImages = [];
+  
+  $('#post').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox') || $(this).parent().hasClass('fancybox-thumb')) return;
+      var alt = this.alt || this.title;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'post' + i);
+    });
+  });
+  $(".fancybox").fancybox();
+
+var vegasConfig = {"preload­Image":true,"transition":["slideLeft2","slideRight2","flash2"],"timer":true,"delay":10000,"shuffle":true,"count":28};
+var unsplashConfig = {"gravity":"north"};
+// is show background images
+var turnoffBackgroundImage = false;
+
+
+
+  turnoffBackgroundImage = true;
+
+
+var backgroundColor = "D7CCC8";
+
+$(".fancybox-thumb").fancybox({
+  prevEffect: 'none',
+  nextEffect: 'none',
+  helpers: {
+    title: {
+      type: 'outside'
+    },
+    thumbs: {
+      width: 50,
+      height: 50
+    }
+  }
+});
+
+// show video with plyr
+$(".video-container iframe").each(function(i){
+  var url = $(this).attr('src');
+  var id = url.split('/').pop();
+  var plyrContainer = document.createElement('div');
+  plyrContainer.className = 'plyr';
+  var plyrElement = document.createElement('div');
+  plyrElement.dataset.videoId = id;
+  switch(true) {
+    case url.search('youtube.com') >= 0:
+      plyrElement.dataset.type = 'youtube';
+      break;
+    case url.search('vimeo.com') >= 0:
+      plyrElement.dataset.type = 'vimeo';
+      break;
+    default:
+      return;
+  };
+  plyrContainer.appendChild(plyrElement);
+  $(this).parent().html(plyrContainer);
+});
+plyr.setup('.plyr', {iconUrl: '/css/sprite.svg'});
+</script>
+</body>
+</html>
+

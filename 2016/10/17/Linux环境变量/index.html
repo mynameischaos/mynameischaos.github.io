@@ -1,0 +1,373 @@
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <meta name="author" content="zhonghuasong">
+  
+  
+  
+  
+    <meta name="description" content="分类Linux下的环境变量按生存周期来划分，可以划分为两种：
+1)永久的：需要修改配置文件， 变量永久生效
+2)临时的：直接在终端使用export命令声明即可，但是关闭shell后失效。
+设置方法在/etc/profile中添加变量——即是全局的，对所有用户都生效（永久的）12vim /etc/profileexport PATH=$PATH:/usr/local/bin:/usr/loca...">
+  
+  <title>Linux下环境变量设置 [ 清水汪汪 ]</title>
+  
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="/css/random.css">
+<link rel="stylesheet" href="/css/vegas.min.css">
+<link rel="stylesheet" href="/css/highlight-railscasts.css">
+<link rel="stylesheet" href="/css/jquery.fancybox.css">
+<link rel="stylesheet" href="/css/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/jquery.fancybox-thumbs.css">
+<link rel="stylesheet" href="/css/plyr.css">
+  
+</head>
+
+<body>
+<div class="side-navigate hide-area">
+  
+    <div class="item prev">
+      <a href="/2016/10/18/g++编译opencv程序/">
+        <div class="item-icon"></div>
+      </a>
+      <div class="item-title">
+        Mac下用g++编译opencv程序报错
+      </div>
+    </div>
+  
+  
+    <div class="item next">
+      <a href="/2016/10/17/machine_learning(2)/">
+        <div class="item-icon"></div>
+      </a>
+      <div class="item-title">
+        机器学习——读书笔记2
+      </div>
+    </div>
+  
+</div>
+<div id="outer-container" class="hide-area">
+<div id="container">
+  <div id="menu-outer" class="slide-down">
+    <div id="menu-inner">
+      <div id="brand">
+        
+        <a onClick="openUserCard()">
+          <img id="avatar" src="/image/dog.jpg"/>
+          <div id="homelink">清水汪汪</div>
+        </a>
+      </div>
+      <div id="menu-list">
+        <ul>
+        
+        
+          
+            <li>
+          
+            <a href="/">首页</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/archives">文章</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/tags">标签</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/categories">分类</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/links">友链</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/about">关于</a>
+            
+          </li>
+        
+        </ul>
+      </div>
+      <div id="show-menu">
+        <button>Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="content-outer">
+    <div id="content-inner">
+      
+      
+  <article id="post">
+    <h1>Linux下环境变量设置</h1>
+    <p class="page-title-sub">
+      <span id = "post-title-date">撰写于 2016-10-17</span>
+      
+        <span id = "post-title-updated">修改于 2016-10-17</span>
+      
+      
+      <span id = "post-title-categories">分类
+      
+      
+        
+        
+        <a href="/categories/Linux/">Linux</a>
+      
+      </span>
+      
+      
+      <span id = "post-title-tags">
+      标签
+      
+      
+        
+        
+        <a href="/tags/Linux/">Linux</a>
+      
+      </span>
+      
+    </p>
+    
+    <h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><p>Linux下的环境变量按生存周期来划分，可以划分为两种：</p>
+<p>1)<strong>永久的：</strong>需要修改配置文件， 变量永久生效</p>
+<p>2)<strong>临时的：</strong>直接在终端使用export命令声明即可，但是关闭shell后失效。</p>
+<h3 id="设置方法"><a href="#设置方法" class="headerlink" title="设置方法"></a>设置方法</h3><h4 id="在-etc-profile中添加变量——即是全局的，对所有用户都生效（永久的）"><a href="#在-etc-profile中添加变量——即是全局的，对所有用户都生效（永久的）" class="headerlink" title="在/etc/profile中添加变量——即是全局的，对所有用户都生效（永久的）"></a>在/etc/profile中添加变量——即是全局的，对所有用户都生效（永久的）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vim /etc/profile</div><div class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/<span class="built_in">local</span>/bin:/usr/<span class="built_in">local</span>/sbin</div></pre></td></tr></table></figure>
+<p>保存后，使设置生效： <strong>source /etc/profile</strong></p>
+<h4 id="在用户目录下的-bash-profile中添加变量——对当前用户有效-永久的"><a href="#在用户目录下的-bash-profile中添加变量——对当前用户有效-永久的" class="headerlink" title="在用户目录下的.bash_profile中添加变量——对当前用户有效(永久的)"></a>在用户目录下的.bash_profile中添加变量——对当前用户有效(永久的)</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vim ~/.bash_profile</div><div class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/User/zhonghuasong/JAVA/apache-tomcat-7.0.72/bin</div></pre></td></tr></table></figure>
+<p>保存后，使设置生效： <strong>source ~/.bash_profile</strong></p>
+<h4 id="直接在命令行中设置环境变量——临时的，关闭shell后即失效"><a href="#直接在命令行中设置环境变量——临时的，关闭shell后即失效" class="headerlink" title="直接在命令行中设置环境变量——临时的，关闭shell后即失效"></a>直接在命令行中设置环境变量——临时的，关闭shell后即失效</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/User/zhonghuasong/JAVA/apache-tomcat-7.0.72/bin</div></pre></td></tr></table></figure>
+
+  </article>
+  <div class="random-toc-area">
+  <button class="btn-hide-toc btn-hide-toc-show" style="display: none" onclick="TOCToggle()">显示目录</button>
+  <button class="btn-hide-toc btn-hide-toc-hide" onclick="TOCToggle()">隐藏目录</button>
+  <div class="random-toc">
+    <h2>目录</h2>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#分类"><span class="toc-text">分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置方法"><span class="toc-text">设置方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#在-etc-profile中添加变量——即是全局的，对所有用户都生效（永久的）"><span class="toc-text">在/etc/profile中添加变量——即是全局的，对所有用户都生效（永久的）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在用户目录下的-bash-profile中添加变量——对当前用户有效-永久的"><span class="toc-text">在用户目录下的.bash_profile中添加变量——对当前用户有效(永久的)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#直接在命令行中设置环境变量——临时的，关闭shell后即失效"><span class="toc-text">直接在命令行中设置环境变量——临时的，关闭shell后即失效</span></a></li></ol></li></ol>
+  </div>
+</div>
+
+  
+<nav id="pagination">
+  
+    <a href="/2016/10/18/g++编译opencv程序/" class="prev">&larr; 上一篇 Mac下用g++编译opencv程序报错</a>
+  
+
+  
+
+  
+    <a href="/2016/10/17/machine_learning(2)/" class="next">下一篇 机器学习——读书笔记2 &rarr;</a>
+  
+</nav>
+
+  <!-- JiaThis Button BEGIN -->
+
+<!-- JiaThis Button END -->
+
+
+      
+      <div class="ds-thread" data-thread-key="2016/10/17/Linux环境变量/" data-title="Linux下环境变量设置" data-url="http://yoursite.com/2016/10/17/Linux环境变量/"></div>
+      
+      
+      
+    </div>
+  </div>
+
+  <div id="bottom-outer">
+    <div id="bottom-inner">
+      Site by zhonghuasong using
+      <a href="http://hexo.io">Hexo</a> 
+      <br>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  <script type="text/javascript">
+var duoshuoQuery = {short_name:"mynameischaos"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+   || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+<div id="user-card">
+  <div class="center-field">
+    <img class="avatar" src="/image/dog.jpg">
+    <p id="description">慢慢来比较快</p>
+    <ul class="social-icon">
+  
+  
+    <li>
+      <a href="https://github.com/mynameischaos">
+        
+          <i class="icon iconfont github">&#xe606;</i>
+        
+      </a>
+    </li>
+  
+</ul>
+  </div>
+</div>
+
+
+<div id="btn-view">Hide</div>
+
+<script>
+// is trigger analytics / tongji script
+var isIgnoreHost = false;
+
+if(window && window.location && window.location.host) {
+  isIgnoreHost = ["localhost","127.0.0.1"].some(function(address){
+    return 0 === window.location.host.indexOf(address);
+  });
+}
+
+var isTriggerAnalytics = !( true && isIgnoreHost );
+
+</script>
+
+  <script>
+if(isTriggerAnalytics) {
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?7a290d9537f12cac590017345eb137b4";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+}
+</script>
+
+
+
+
+
+  
+  
+    <script src="/js/jquery-2.2.3.min.js"></script>
+  
+    <script src="/js/vegas.min.js"></script>
+  
+    <script src="/js/random.js"></script>
+  
+    <script src="/js/highlight.pack.js"></script>
+  
+    <script src="/js/jquery.mousewheel.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox-thumbs.js"></script>
+  
+    <script src="/js/plyr.js"></script>
+  
+
+<script>
+
+  // fancybox
+  var backgroundImages = [];
+  
+  $('#post').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox') || $(this).parent().hasClass('fancybox-thumb')) return;
+      var alt = this.alt || this.title;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'post' + i);
+    });
+  });
+  $(".fancybox").fancybox();
+
+var vegasConfig = {"preload­Image":true,"transition":["slideLeft2","slideRight2","flash2"],"timer":true,"delay":10000,"shuffle":true,"count":28};
+var unsplashConfig = {"gravity":"north"};
+// is show background images
+var turnoffBackgroundImage = false;
+
+
+
+  turnoffBackgroundImage = true;
+
+
+var backgroundColor = "D7CCC8";
+
+$(".fancybox-thumb").fancybox({
+  prevEffect: 'none',
+  nextEffect: 'none',
+  helpers: {
+    title: {
+      type: 'outside'
+    },
+    thumbs: {
+      width: 50,
+      height: 50
+    }
+  }
+});
+
+// show video with plyr
+$(".video-container iframe").each(function(i){
+  var url = $(this).attr('src');
+  var id = url.split('/').pop();
+  var plyrContainer = document.createElement('div');
+  plyrContainer.className = 'plyr';
+  var plyrElement = document.createElement('div');
+  plyrElement.dataset.videoId = id;
+  switch(true) {
+    case url.search('youtube.com') >= 0:
+      plyrElement.dataset.type = 'youtube';
+      break;
+    case url.search('vimeo.com') >= 0:
+      plyrElement.dataset.type = 'vimeo';
+      break;
+    default:
+      return;
+  };
+  plyrContainer.appendChild(plyrElement);
+  $(this).parent().html(plyrContainer);
+});
+plyr.setup('.plyr', {iconUrl: '/css/sprite.svg'});
+</script>
+</body>
+</html>
+

@@ -1,0 +1,419 @@
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <meta name="author" content="zhonghuasong">
+  
+  
+  
+  
+    <meta name="description" content="1. 安装Scrapy包
+pip install scrapy, 安装教程
+Mac下可能会出现：OSError: [Errno 13] Permission denied: ‘/Library/Python/2.7/site-packages/pyasn1’
+应该是权限问题，解决方案：sudo pip install scrapy
+
+2. 使用教程1. 创建一个Scrapy工程scrapy ...">
+  
+  <title>Scrapy Tutorial [ 清水汪汪 ]</title>
+  
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="/css/random.css">
+<link rel="stylesheet" href="/css/vegas.min.css">
+<link rel="stylesheet" href="/css/highlight-railscasts.css">
+<link rel="stylesheet" href="/css/jquery.fancybox.css">
+<link rel="stylesheet" href="/css/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/jquery.fancybox-thumbs.css">
+<link rel="stylesheet" href="/css/plyr.css">
+  
+</head>
+
+<body>
+<div class="side-navigate hide-area">
+  
+    <div class="item prev">
+      <a href="/2016/09/22/git基本命令/">
+        <div class="item-icon"></div>
+      </a>
+      <div class="item-title">
+        git基本命令
+      </div>
+    </div>
+  
+  
+    <div class="item next">
+      <a href="/2016/09/21/text_summarization/">
+        <div class="item-icon"></div>
+      </a>
+      <div class="item-title">
+        Text Summarization
+      </div>
+    </div>
+  
+</div>
+<div id="outer-container" class="hide-area">
+<div id="container">
+  <div id="menu-outer" class="slide-down">
+    <div id="menu-inner">
+      <div id="brand">
+        
+        <a onClick="openUserCard()">
+          <img id="avatar" src="/image/dog.jpg"/>
+          <div id="homelink">清水汪汪</div>
+        </a>
+      </div>
+      <div id="menu-list">
+        <ul>
+        
+        
+          
+            <li>
+          
+            <a href="/">首页</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/archives">文章</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/tags">标签</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/categories">分类</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/links">友链</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/about">关于</a>
+            
+          </li>
+        
+        </ul>
+      </div>
+      <div id="show-menu">
+        <button>Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="content-outer">
+    <div id="content-inner">
+      
+      
+  <article id="post">
+    <h1>Scrapy Tutorial</h1>
+    <p class="page-title-sub">
+      <span id = "post-title-date">撰写于 2016-09-22</span>
+      
+        <span id = "post-title-updated">修改于 2016-09-22</span>
+      
+      
+      <span id = "post-title-categories">分类
+      
+      
+        
+        
+        <a href="/categories/技术/">技术</a>
+      
+      </span>
+      
+      
+      <span id = "post-title-tags">
+      标签
+      
+      
+        
+        
+        <a href="/tags/scrapy/">scrapy</a>
+      
+      </span>
+      
+    </p>
+    
+    <h3 id="1-安装Scrapy包"><a href="#1-安装Scrapy包" class="headerlink" title="1. 安装Scrapy包"></a>1. 安装Scrapy包</h3><ul>
+<li>pip install scrapy, <a href="http://doc.scrapy.org/en/1.1/intro/install.html#intro-install" target="_blank" rel="external">安装教程</a></li>
+<li>Mac下可能会出现：OSError: [Errno 13] Permission denied: ‘/Library/Python/2.7/site-packages/pyasn1’</li>
+<li>应该是权限问题，解决方案：sudo pip install scrapy</li>
+</ul>
+<h3 id="2-使用教程"><a href="#2-使用教程" class="headerlink" title="2. 使用教程"></a>2. 使用教程</h3><h5 id="1-创建一个Scrapy工程"><a href="#1-创建一个Scrapy工程" class="headerlink" title="1. 创建一个Scrapy工程"></a>1. 创建一个Scrapy工程</h5><p><code>scrapy startproject tutorial</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">tutorial/</div><div class="line">   </div><div class="line">   scrapy.cfg            <span class="comment"># 配置文件</span></div><div class="line">   </div><div class="line">   tutorial/             <span class="comment"># 工程的python模块，你将从这里引入你的代码</span></div><div class="line">   __init__.py</div><div class="line"></div><div class="line">   items.py          <span class="comment"># 工程的项目文件</span></div><div class="line"></div><div class="line">   pipelines.py      <span class="comment"># 工程的流水线文件</span></div><div class="line"></div><div class="line">   settings.py       <span class="comment"># 工程的设置文件</span></div><div class="line"></div><div class="line">   spiders/          <span class="comment"># 你将安放爬虫程序的目录</span></div><div class="line">    __init__.py</div></pre></td></tr></table></figure>
+<h5 id="2-定义Item"><a href="#2-定义Item" class="headerlink" title="2. 定义Item"></a>2. 定义Item</h5><ul>
+<li>Items是将要被爬虫数据加载的容器，工作方式类似于Python的字典(dict)，在Scrapy中，也可以使用原生的Python字典，但是Iterms提供了一些额外的保护机制防止写未申明的域和防止拼写错误。</li>
+<li>创建一个scrapy.Item类，然后定义它的属性scrapy.Field(),类似于ORM(关系对象模型)</li>
+<li>爬<a href="quotes.toscrape.com">quotes.toscrape.com</a>中的文本和作者为例，在items.py中编辑如下代码：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">QuoteItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line">    text = scrapy.Field()</div><div class="line">    author = scrapy.Field()</div></pre></td></tr></table></figure>
+<h5 id="3-定义爬虫程序"><a href="#3-定义爬虫程序" class="headerlink" title="3. 定义爬虫程序"></a>3. 定义爬虫程序</h5><p>创建一个爬虫，首先要继承scrapy.Spider，并且定义一些属性:  </p>
+<ul>
+<li>name: 定义这个爬虫的名字，在同一个工程中必须是唯一的。</li>
+<li>start_urls: 开始爬虫的url列表</li>
+<li>parse(): 定义爬虫的方法，也叫做下载每个url的响应(Response)对象，response作为此方法第一个也是唯一一个参数。 此方法的主要作用是：解析响应数据和提取爬取数据中更多的url</li>
+<li>在spiders目录中创建quotes_spider.py文件，并编写以下代码:</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">QuotesSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"quotes"</span></div><div class="line">    start_urls = [</div><div class="line">        <span class="string">'http://quotes.toscrape.com/page/1/'</span>,</div><div class="line">        <span class="string">'http://quotes.toscrape.com/page/2/'</span>,</div><div class="line">    ]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        filename = <span class="string">'quotes-'</span> + response.url.split(<span class="string">"/"</span>)[<span class="number">-2</span>] + <span class="string">'.html'</span></div><div class="line">        <span class="keyword">with</span> open(filename, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</div><div class="line">            f.write(response.body)</div></pre></td></tr></table></figure>
+<h5 id="4-开始爬虫"><a href="#4-开始爬虫" class="headerlink" title="4. 开始爬虫"></a>4. 开始爬虫</h5><p>在工程的顶层目录执行以下命令：</p>
+<p><code>scrapy crawl quotes</code></p>
+<p>解释过程：其实是对start_urls中的链接进行http请求，然后对请求的结果进行解析，也就是执行parse()函数。</p>
+<h5 id="5-提取其中的Item"><a href="#5-提取其中的Item" class="headerlink" title="5. 提取其中的Item"></a>5. 提取其中的Item</h5><p><strong>(1). 引入选择器(Selectors)</strong><br>有许多方法从web页面中提取数据，Scrapy采用的是一种基于XPath和CSS表达式的机制，叫做Scrapy Selector。<br>以下是几个XPath的表达式及其含义： </p>
+<ul>
+<li>/html/head/title : 从html标签中的head标签中选择title元素， 等价的CSS选择器： html &gt; head &gt; title</li>
+<li>/html/head/title/text() : 选择title中的text， 等价的CSS选择器：html &gt; head &gt; title ::text</li>
+<li>//td : 从文档中选择所有的<td>元素， 等价的CSS选择器： td</td></li>
+<li>//div[@class=”mine”] : 选择一个包含属性 class=”mine”的div， 等价的CSS选择器： div.mine, @表示属性</li>
+</ul>
+<p><strong>CSS VS XPath</strong>： 提取数据可以只用CSS选择器，但是XPath的功能更加强大，因为除了可以定位结构以外，它还可以查询内容，例如选择那些链接内容中包含”Next Page”的链接。所以鼓励使用XPath。<br>为了方便CSS和XPath的表达，Scrapy提供了Selector类和方便的快捷键来避免当每次从响应中选择某些文本时候都自己写选择器。<br>你可以将选择器看作是文档结构中表示节点的对象。所以第一个需要写的选择器是和根节点有关的。<br>选择器有以下四个基本的方法：  </p>
+<ul>
+<li>xpath(): 返回一个选择器列表，每一个都表示xpath表达式作为参数选择的节点。</li>
+<li>css(): 返回一个选择列表，同上。</li>
+<li>extract(): 返回选择数据的统一编码字符串。</li>
+<li>re(): 返回一个利用正则表达式作为参数所提取的统一编码的字符串的列表。</li>
+</ul>
+<p><strong>(2). 在shell中尝试选择器</strong><br>好处就是可以直接得到一个response变量，然后可以直接执行一些选择器即可看到响应的结果，例如：<br><code>scrapy shell &quot;http://quotes.toscrape.com&quot;</code>  (链接一定要用引号引起来)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">[ ... Scrapy log here ... ]</div><div class="line"></div><div class="line"><span class="number">2016</span><span class="number">-09</span><span class="number">-01</span> <span class="number">18</span>:<span class="number">14</span>:<span class="number">39</span> [scrapy] DEBUG: Crawled (<span class="number">200</span>) &lt;GET http://quotes.toscrape.com&gt; (referer: <span class="keyword">None</span>)</div><div class="line">[s] Available Scrapy objects:</div><div class="line">[s]   crawler    &lt;scrapy.crawler.Crawler object at <span class="number">0x109001c90</span>&gt;</div><div class="line">[s]   item       &#123;&#125;</div><div class="line">[s]   request    &lt;GET http://quotes.toscrape.com&gt;</div><div class="line">[s]   response   &lt;<span class="number">200</span> http://quotes.toscrape.com&gt;</div><div class="line">[s]   settings   &lt;scrapy.settings.Settings object at <span class="number">0x109001610</span>&gt;</div><div class="line">[s]   spider     &lt;DefaultSpider <span class="string">'default'</span> at <span class="number">0x1092808d0</span>&gt;</div><div class="line">[s] Useful shortcuts:</div><div class="line">[s]   shelp()           Shell help (<span class="keyword">print</span> this help)</div><div class="line">[s]   fetch(req_or_url) Fetch request (<span class="keyword">or</span> URL) <span class="keyword">and</span> update local objects</div><div class="line">[s]   view(response)    View response <span class="keyword">in</span> a browser</div><div class="line"></div><div class="line"> &gt;&gt;&gt;</div><div class="line"></div><div class="line">In [<span class="number">1</span>]: response.xpath(<span class="string">'//title'</span>)</div><div class="line">Out[<span class="number">1</span>]: [&lt;Selector xpath=<span class="string">'//title'</span> data=<span class="string">u'&lt;title&gt;Quotes to Scrape&lt;/title&gt;'</span>&gt;]</div><div class="line"></div><div class="line">In [<span class="number">2</span>]: response.xpath(<span class="string">'//title'</span>).extract()</div><div class="line">Out[<span class="number">2</span>]: [<span class="string">u'&lt;title&gt;Quotes to Scrape&lt;/title&gt;'</span>]</div><div class="line"></div><div class="line">In [<span class="number">3</span>]: response.xpath(<span class="string">'//title/text()'</span>)</div><div class="line">Out[<span class="number">3</span>]: [&lt;Selector xpath=<span class="string">'//title/text()'</span> data=<span class="string">u'Quotes to Scrape'</span>&gt;]</div><div class="line"></div><div class="line">In [<span class="number">4</span>]: response.xpath(<span class="string">'//title/text()'</span>).extract()</div><div class="line">Out[<span class="number">4</span>]: [<span class="string">u'Quotes to Scrape'</span>]</div><div class="line"></div><div class="line">In [<span class="number">11</span>]: response.xpath(<span class="string">'//title/text()'</span>).re(<span class="string">'(\w+)'</span>)</div><div class="line">Out[<span class="number">11</span>]: [<span class="string">u'Quotes'</span>, <span class="string">u'to'</span>, <span class="string">u'Scrape'</span>]</div></pre></td></tr></table></figure>
+<p><strong>(3). 提取数据</strong></p>
+<p>代码如下：  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">QuotesSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"quotes"</span></div><div class="line">    start_urls = [</div><div class="line">        <span class="string">"http://quotes.toscrape.com/page/1/"</span>,</div><div class="line">        <span class="string">"http://quotes.toscrape.com/page/2/"</span>,</div><div class="line">    ]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">for</span> quote <span class="keyword">in</span> response.xpath(<span class="string">'//div[@class="quote"]'</span>):</div><div class="line">            text = quote.xpath(<span class="string">'span[@class="text"]/text()'</span>).extract_first()</div><div class="line">            author = quote.xpath(<span class="string">'span/small/text()'</span>).extract_first()</div><div class="line">            print(<span class="string">u'&#123;&#125;: &#123;&#125;'</span>.format(author, text))</div></pre></td></tr></table></figure>
+<p><strong>(4). 利用我们的Item</strong></p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">from</span> tutorial.items <span class="keyword">import</span> QuoteItem</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">QuotesSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"quotes"</span></div><div class="line">    start_urls = [</div><div class="line">        <span class="string">'http://quotes.toscrape.com/page/1/'</span>,</div><div class="line">        <span class="string">'http://quotes.toscrape.com/page/2/'</span>,</div><div class="line">    ]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">for</span> quote <span class="keyword">in</span> response.xpath(<span class="string">'//div[@class="quote"]'</span>):</div><div class="line">            item = QuoteItem()</div><div class="line">            item[<span class="string">'text'</span>] = quote.xpath(<span class="string">'span[@class="text"]/text()'</span>).extract_first()</div><div class="line">            item[<span class="string">'author'</span>] = quote.xpath(<span class="string">'span/small/text()'</span>).extract_first()</div><div class="line">            <span class="keyword">yield</span> item</div></pre></td></tr></table></figure>
+<p><strong>(5). 跟踪链接</strong></p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">from</span> tutorial.items <span class="keyword">import</span> QuoteItem</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">QuotesSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"quotes"</span></div><div class="line">    start_urls = [</div><div class="line">        <span class="string">'http://quotes.toscrape.com/page/1/'</span>,</div><div class="line">    ]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">for</span> quote <span class="keyword">in</span> response.xpath(<span class="string">'//div[@class="quote"]'</span>):</div><div class="line">            item = QuoteItem()</div><div class="line">            item[<span class="string">'text'</span>] = quote.xpath(<span class="string">'span[@class="text"]/text()'</span>).extract_first()</div><div class="line">            item[<span class="string">'author'</span>] = quote.xpath(<span class="string">'span/small/text()'</span>).extract_first()</div><div class="line">            <span class="keyword">yield</span> item</div><div class="line">        next_page = response.xpath(<span class="string">'//li[@class="next"]/a/@href'</span>).extract_first()</div><div class="line">        <span class="keyword">if</span> next_page:</div><div class="line">            next_page = response.urljoin(next_page)</div><div class="line">            <span class="keyword">yield</span> scrapy.Request(next_page, callback=self.parse)</div></pre></td></tr></table></figure>
+<p><strong>(6). 存储爬到的数据</strong></p>
+<p><code>scrapy crawl quotes -o items.json</code></p>
+<p>将产生items.json文件，并且是JSON格式的数据。<br>在大的项目中，可能需要写Item Pipeline.</p>
+
+  </article>
+  <div class="random-toc-area">
+  <button class="btn-hide-toc btn-hide-toc-show" style="display: none" onclick="TOCToggle()">显示目录</button>
+  <button class="btn-hide-toc btn-hide-toc-hide" onclick="TOCToggle()">隐藏目录</button>
+  <div class="random-toc">
+    <h2>目录</h2>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-安装Scrapy包"><span class="toc-text">1. 安装Scrapy包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-使用教程"><span class="toc-text">2. 使用教程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-创建一个Scrapy工程"><span class="toc-text">1. 创建一个Scrapy工程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-定义Item"><span class="toc-text">2. 定义Item</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-定义爬虫程序"><span class="toc-text">3. 定义爬虫程序</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-开始爬虫"><span class="toc-text">4. 开始爬虫</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-提取其中的Item"><span class="toc-text">5. 提取其中的Item</span></a></li></ol></li></ol></li></ol>
+  </div>
+</div>
+
+  
+<nav id="pagination">
+  
+    <a href="/2016/09/22/git基本命令/" class="prev">&larr; 上一篇 git基本命令</a>
+  
+
+  
+
+  
+    <a href="/2016/09/21/text_summarization/" class="next">下一篇 Text Summarization &rarr;</a>
+  
+</nav>
+
+  <!-- JiaThis Button BEGIN -->
+
+<!-- JiaThis Button END -->
+
+
+      
+      <div class="ds-thread" data-thread-key="2016/09/22/scrapy_tutorial/" data-title="Scrapy Tutorial" data-url="http://yoursite.com/2016/09/22/scrapy_tutorial/"></div>
+      
+      
+      
+    </div>
+  </div>
+
+  <div id="bottom-outer">
+    <div id="bottom-inner">
+      Site by zhonghuasong using
+      <a href="http://hexo.io">Hexo</a> 
+      <br>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  <script type="text/javascript">
+var duoshuoQuery = {short_name:"mynameischaos"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+   || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+<div id="user-card">
+  <div class="center-field">
+    <img class="avatar" src="/image/dog.jpg">
+    <p id="description">慢慢来比较快</p>
+    <ul class="social-icon">
+  
+  
+    <li>
+      <a href="https://github.com/mynameischaos">
+        
+          <i class="icon iconfont github">&#xe606;</i>
+        
+      </a>
+    </li>
+  
+</ul>
+  </div>
+</div>
+
+
+<div id="btn-view">Hide</div>
+
+<script>
+// is trigger analytics / tongji script
+var isIgnoreHost = false;
+
+if(window && window.location && window.location.host) {
+  isIgnoreHost = ["localhost","127.0.0.1"].some(function(address){
+    return 0 === window.location.host.indexOf(address);
+  });
+}
+
+var isTriggerAnalytics = !( true && isIgnoreHost );
+
+</script>
+
+  <script>
+if(isTriggerAnalytics) {
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?7a290d9537f12cac590017345eb137b4";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+}
+</script>
+
+
+
+
+
+  
+  
+    <script src="/js/jquery-2.2.3.min.js"></script>
+  
+    <script src="/js/vegas.min.js"></script>
+  
+    <script src="/js/random.js"></script>
+  
+    <script src="/js/highlight.pack.js"></script>
+  
+    <script src="/js/jquery.mousewheel.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox-thumbs.js"></script>
+  
+    <script src="/js/plyr.js"></script>
+  
+
+<script>
+
+  // fancybox
+  var backgroundImages = [];
+  
+  $('#post').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox') || $(this).parent().hasClass('fancybox-thumb')) return;
+      var alt = this.alt || this.title;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'post' + i);
+    });
+  });
+  $(".fancybox").fancybox();
+
+var vegasConfig = {"preload­Image":true,"transition":["slideLeft2","slideRight2","flash2"],"timer":true,"delay":10000,"shuffle":true,"count":28};
+var unsplashConfig = {"gravity":"north"};
+// is show background images
+var turnoffBackgroundImage = false;
+
+
+
+  turnoffBackgroundImage = true;
+
+
+var backgroundColor = "D7CCC8";
+
+$(".fancybox-thumb").fancybox({
+  prevEffect: 'none',
+  nextEffect: 'none',
+  helpers: {
+    title: {
+      type: 'outside'
+    },
+    thumbs: {
+      width: 50,
+      height: 50
+    }
+  }
+});
+
+// show video with plyr
+$(".video-container iframe").each(function(i){
+  var url = $(this).attr('src');
+  var id = url.split('/').pop();
+  var plyrContainer = document.createElement('div');
+  plyrContainer.className = 'plyr';
+  var plyrElement = document.createElement('div');
+  plyrElement.dataset.videoId = id;
+  switch(true) {
+    case url.search('youtube.com') >= 0:
+      plyrElement.dataset.type = 'youtube';
+      break;
+    case url.search('vimeo.com') >= 0:
+      plyrElement.dataset.type = 'vimeo';
+      break;
+    default:
+      return;
+  };
+  plyrContainer.appendChild(plyrElement);
+  $(this).parent().html(plyrContainer);
+});
+plyr.setup('.plyr', {iconUrl: '/css/sprite.svg'});
+</script>
+</body>
+</html>
+

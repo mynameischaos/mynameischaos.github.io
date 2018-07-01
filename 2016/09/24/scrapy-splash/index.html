@@ -1,0 +1,401 @@
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <meta name="author" content="zhonghuasong">
+  
+  
+  
+  
+    <meta name="description" content="目前，为了加速页面的加载速度，页面的很多部分都是用JS生成的，而对于用scrapy爬虫来说就是一个很大的问题，因为scrapy没有JS engine，所以爬取的都是静态页面，对于JS生成的动态页面都无法获得。  
+解决方案：  
+
+利用第三方中间件来提供JS渲染服务： scrapy-splash 等。
+利用webkit或者基于webkit库
+
+Splash是一个Javascript渲染服务。...">
+  
+  <title>利用scrapy-splash爬取JS生成的动态页面 [ 清水汪汪 ]</title>
+  
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="/css/random.css">
+<link rel="stylesheet" href="/css/vegas.min.css">
+<link rel="stylesheet" href="/css/highlight-railscasts.css">
+<link rel="stylesheet" href="/css/jquery.fancybox.css">
+<link rel="stylesheet" href="/css/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/jquery.fancybox-thumbs.css">
+<link rel="stylesheet" href="/css/plyr.css">
+  
+</head>
+
+<body>
+<div class="side-navigate hide-area">
+  
+    <div class="item prev">
+      <a href="/2016/09/25/vector用法/">
+        <div class="item-icon"></div>
+      </a>
+      <div class="item-title">
+        C++ STL之vector用法总结
+      </div>
+    </div>
+  
+  
+    <div class="item next">
+      <a href="/2016/09/22/git基本命令/">
+        <div class="item-icon"></div>
+      </a>
+      <div class="item-title">
+        git基本命令
+      </div>
+    </div>
+  
+</div>
+<div id="outer-container" class="hide-area">
+<div id="container">
+  <div id="menu-outer" class="slide-down">
+    <div id="menu-inner">
+      <div id="brand">
+        
+        <a onClick="openUserCard()">
+          <img id="avatar" src="/image/dog.jpg"/>
+          <div id="homelink">清水汪汪</div>
+        </a>
+      </div>
+      <div id="menu-list">
+        <ul>
+        
+        
+          
+            <li>
+          
+            <a href="/">首页</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/archives">文章</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/tags">标签</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/categories">分类</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/links">友链</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/about">关于</a>
+            
+          </li>
+        
+        </ul>
+      </div>
+      <div id="show-menu">
+        <button>Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="content-outer">
+    <div id="content-inner">
+      
+      
+  <article id="post">
+    <h1>利用scrapy-splash爬取JS生成的动态页面</h1>
+    <p class="page-title-sub">
+      <span id = "post-title-date">撰写于 2016-09-24</span>
+      
+        <span id = "post-title-updated">修改于 2016-09-24</span>
+      
+      
+      <span id = "post-title-categories">分类
+      
+      
+        
+        
+        <a href="/categories/scrapy/">scrapy</a>
+      
+      </span>
+      
+      
+      <span id = "post-title-tags">
+      标签
+      
+      
+        
+        
+        <a href="/tags/scrapy/">scrapy</a>
+      
+      </span>
+      
+    </p>
+    
+    <p>目前，为了加速页面的加载速度，页面的很多部分都是用JS生成的，而对于用scrapy爬虫来说就是一个很大的问题，因为scrapy没有JS engine，所以爬取的都是静态页面，对于JS生成的动态页面都无法获得。  </p>
+<p><strong>解决方案：</strong>  </p>
+<ul>
+<li>利用第三方中间件来提供JS渲染服务： <a href="https://github.com/scrapy-plugins/scrapy-splash" target="_blank" rel="external">scrapy-splash</a> 等。</li>
+<li>利用webkit或者基于webkit库</li>
+</ul>
+<p><strong>Splash是一个Javascript渲染服务。它是一个实现了HTTP API的轻量级浏览器，Splash是用Python实现的，同时使用Twisted和QT。Twisted（QT）用来让服务具有异步处理能力，以发挥webkit的并发能力。</strong>  </p>
+<hr>
+<p>下面就来讲一下如何使用scrapy-splash：  </p>
+<ol>
+<li>利用pip安装scrapy-splash库：<br> <code>$ pip install scrapy-splash</code></li>
+<li>scrapy-splash使用的是Splash HTTP API， 所以需要一个splash instance，一般采用docker运行splash，所以需要安装<a href="http://splash.readthedocs.io/en/latest/install.html" target="_blank" rel="external">docker</a>。  </li>
+<li>安装<a href="https://www.docker.com/" target="_blank" rel="external">docker</a>, 安装好后运行docker。</li>
+<li>拉取镜像(pull the image)：<br><code>$ docker pull scrapinghub/splash</code></li>
+<li>用docker运行scrapinghub/splash：<br><code>$ docker run -p 8050:8050 scrapinghub/splash</code></li>
+<li><p>配置splash服务（以下操作全部在settings.py）：  </p>
+<p> 1）添加splash服务器地址： </p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SPLASH_URL = <span class="string">'http://localhost:8050'</span></div></pre></td></tr></table></figure>
+<p> 2）将splash middleware添加到DOWNLOADER_MIDDLEWARE中：  </p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">DOWNLOADER_MIDDLEWARES = &#123;</div><div class="line">   <span class="string">'scrapy_splash.SplashCookiesMiddleware'</span>: <span class="number">723</span>,</div><div class="line">   <span class="string">'scrapy_splash.SplashMiddleware'</span>: <span class="number">725</span>,</div><div class="line">   <span class="string">'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware'</span>: <span class="number">810</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 3)Enable SplashDeduplicateArgsMiddleware:  </p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">SPIDER_MIDDLEWARES = &#123;</div><div class="line">   <span class="string">'scrapy_splash.SplashDeduplicateArgsMiddleware'</span>: <span class="number">100</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 4)Set a custom DUPEFILTER_CLASS:  </p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DUPEFILTER_CLASS = <span class="string">'scrapy_splash.SplashAwareDupeFilter'</span></div></pre></td></tr></table></figure>
+<p> 5)a custom cache storage backend:  </p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">HTTPCACHE_STORAGE = <span class="string">'scrapy_splash.SplashAwareFSCacheStorage'</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li>例子<br>获取HTML内容：  </li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">from</span> scrapy_splash <span class="keyword">import</span> SplashRequest</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    start_urls = [<span class="string">"http://example.com"</span>, <span class="string">"http://example.com/foo"</span>]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_requests</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">for</span> url <span class="keyword">in</span> self.start_urls:</div><div class="line">            <span class="keyword">yield</span> SplashRequest(url, self.parse, args=&#123;<span class="string">'wait'</span>: <span class="number">0.5</span>&#125;)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="comment"># response.body is a result of render.html call; it</span></div><div class="line">        <span class="comment"># contains HTML processed by a browser.</span></div><div class="line">        <span class="comment"># ...</span></div></pre></td></tr></table></figure>
+<p>参考链接：<br><a href="https://github.com/scrapy-plugins/scrapy-splash" target="_blank" rel="external">scrapy_splash教程</a><br><a href="http://ae.yyuap.com/pages/viewpage.action?pageId=919763" target="_blank" rel="external">Scrapy爬虫中使用Splash处理页面JS</a></p>
+
+  </article>
+  <div class="random-toc-area">
+  <button class="btn-hide-toc btn-hide-toc-show" style="display: none" onclick="TOCToggle()">显示目录</button>
+  <button class="btn-hide-toc btn-hide-toc-hide" onclick="TOCToggle()">隐藏目录</button>
+  <div class="random-toc">
+    <h2>目录</h2>
+    
+  </div>
+</div>
+
+  
+<nav id="pagination">
+  
+    <a href="/2016/09/25/vector用法/" class="prev">&larr; 上一篇 C++ STL之vector用法总结</a>
+  
+
+  
+
+  
+    <a href="/2016/09/22/git基本命令/" class="next">下一篇 git基本命令 &rarr;</a>
+  
+</nav>
+
+  <!-- JiaThis Button BEGIN -->
+
+<!-- JiaThis Button END -->
+
+
+      
+      <div class="ds-thread" data-thread-key="2016/09/24/scrapy-splash/" data-title="利用scrapy-splash爬取JS生成的动态页面" data-url="http://yoursite.com/2016/09/24/scrapy-splash/"></div>
+      
+      
+      
+    </div>
+  </div>
+
+  <div id="bottom-outer">
+    <div id="bottom-inner">
+      Site by zhonghuasong using
+      <a href="http://hexo.io">Hexo</a> 
+      <br>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  <script type="text/javascript">
+var duoshuoQuery = {short_name:"mynameischaos"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+   || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+<div id="user-card">
+  <div class="center-field">
+    <img class="avatar" src="/image/dog.jpg">
+    <p id="description">慢慢来比较快</p>
+    <ul class="social-icon">
+  
+  
+    <li>
+      <a href="https://github.com/mynameischaos">
+        
+          <i class="icon iconfont github">&#xe606;</i>
+        
+      </a>
+    </li>
+  
+</ul>
+  </div>
+</div>
+
+
+<div id="btn-view">Hide</div>
+
+<script>
+// is trigger analytics / tongji script
+var isIgnoreHost = false;
+
+if(window && window.location && window.location.host) {
+  isIgnoreHost = ["localhost","127.0.0.1"].some(function(address){
+    return 0 === window.location.host.indexOf(address);
+  });
+}
+
+var isTriggerAnalytics = !( true && isIgnoreHost );
+
+</script>
+
+  <script>
+if(isTriggerAnalytics) {
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?7a290d9537f12cac590017345eb137b4";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+}
+</script>
+
+
+
+
+
+  
+  
+    <script src="/js/jquery-2.2.3.min.js"></script>
+  
+    <script src="/js/vegas.min.js"></script>
+  
+    <script src="/js/random.js"></script>
+  
+    <script src="/js/highlight.pack.js"></script>
+  
+    <script src="/js/jquery.mousewheel.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox-thumbs.js"></script>
+  
+    <script src="/js/plyr.js"></script>
+  
+
+<script>
+
+  // fancybox
+  var backgroundImages = [];
+  
+  $('#post').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox') || $(this).parent().hasClass('fancybox-thumb')) return;
+      var alt = this.alt || this.title;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'post' + i);
+    });
+  });
+  $(".fancybox").fancybox();
+
+var vegasConfig = {"preload­Image":true,"transition":["slideLeft2","slideRight2","flash2"],"timer":true,"delay":10000,"shuffle":true,"count":28};
+var unsplashConfig = {"gravity":"north"};
+// is show background images
+var turnoffBackgroundImage = false;
+
+
+
+  turnoffBackgroundImage = true;
+
+
+var backgroundColor = "D7CCC8";
+
+$(".fancybox-thumb").fancybox({
+  prevEffect: 'none',
+  nextEffect: 'none',
+  helpers: {
+    title: {
+      type: 'outside'
+    },
+    thumbs: {
+      width: 50,
+      height: 50
+    }
+  }
+});
+
+// show video with plyr
+$(".video-container iframe").each(function(i){
+  var url = $(this).attr('src');
+  var id = url.split('/').pop();
+  var plyrContainer = document.createElement('div');
+  plyrContainer.className = 'plyr';
+  var plyrElement = document.createElement('div');
+  plyrElement.dataset.videoId = id;
+  switch(true) {
+    case url.search('youtube.com') >= 0:
+      plyrElement.dataset.type = 'youtube';
+      break;
+    case url.search('vimeo.com') >= 0:
+      plyrElement.dataset.type = 'vimeo';
+      break;
+    default:
+      return;
+  };
+  plyrContainer.appendChild(plyrElement);
+  $(this).parent().html(plyrContainer);
+});
+plyr.setup('.plyr', {iconUrl: '/css/sprite.svg'});
+</script>
+</body>
+</html>
+

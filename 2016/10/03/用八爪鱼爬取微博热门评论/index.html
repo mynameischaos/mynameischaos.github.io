@@ -1,0 +1,374 @@
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <meta name="author" content="zhonghuasong">
+  
+  
+  
+  
+    <meta name="description" content="关于八爪鱼八爪鱼, 是一款简单易操作的爬虫工具。当然这种工具也有一定的局限性，可定制性肯定没有用一些爬虫框架(scrapy等)好(毕竟代码是自己写的，哈哈)。
+使用八爪鱼最近，使用八爪鱼爬取了一些微博的热门评论。当然，使用新浪微博API也是可以的。但是，自己为了快嘛，也想了解一下这个工具。八爪鱼软件中基本爬取工作都有教程的。下面，我就以爬取微博热门评论，讲解一下，足以应付八爪鱼的基本使用了。...">
+  
+  <title>用八爪鱼爬取微博热门评论 [ 清水汪汪 ]</title>
+  
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="/css/random.css">
+<link rel="stylesheet" href="/css/vegas.min.css">
+<link rel="stylesheet" href="/css/highlight-railscasts.css">
+<link rel="stylesheet" href="/css/jquery.fancybox.css">
+<link rel="stylesheet" href="/css/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/jquery.fancybox-thumbs.css">
+<link rel="stylesheet" href="/css/plyr.css">
+  
+</head>
+
+<body>
+<div class="side-navigate hide-area">
+  
+    <div class="item prev">
+      <a href="/2016/10/03/Clion下的相对路径/">
+        <div class="item-icon"></div>
+      </a>
+      <div class="item-title">
+        CLion下的相对路径
+      </div>
+    </div>
+  
+  
+    <div class="item next">
+      <a href="/2016/09/25/vector用法/">
+        <div class="item-icon"></div>
+      </a>
+      <div class="item-title">
+        C++ STL之vector用法总结
+      </div>
+    </div>
+  
+</div>
+<div id="outer-container" class="hide-area">
+<div id="container">
+  <div id="menu-outer" class="slide-down">
+    <div id="menu-inner">
+      <div id="brand">
+        
+        <a onClick="openUserCard()">
+          <img id="avatar" src="/image/dog.jpg"/>
+          <div id="homelink">清水汪汪</div>
+        </a>
+      </div>
+      <div id="menu-list">
+        <ul>
+        
+        
+          
+            <li>
+          
+            <a href="/">首页</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/archives">文章</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/tags">标签</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/categories">分类</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/links">友链</a>
+            
+          </li>
+        
+          
+            <li>
+          
+            <a href="/about">关于</a>
+            
+          </li>
+        
+        </ul>
+      </div>
+      <div id="show-menu">
+        <button>Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="content-outer">
+    <div id="content-inner">
+      
+      
+  <article id="post">
+    <h1>用八爪鱼爬取微博热门评论</h1>
+    <p class="page-title-sub">
+      <span id = "post-title-date">撰写于 2016-10-03</span>
+      
+        <span id = "post-title-updated">修改于 2016-10-03</span>
+      
+      
+      <span id = "post-title-categories">分类
+      
+      
+        
+        
+        <a href="/categories/爬虫工具/">爬虫工具</a>
+      
+      </span>
+      
+      
+      <span id = "post-title-tags">
+      标签
+      
+      
+        
+        
+        <a href="/tags/八爪鱼/">八爪鱼</a>
+      
+      </span>
+      
+    </p>
+    
+    <h3 id="关于八爪鱼"><a href="#关于八爪鱼" class="headerlink" title="关于八爪鱼"></a>关于八爪鱼</h3><p><a href="http://www.bazhuayu.com/" target="_blank" rel="external">八爪鱼</a>, 是一款简单易操作的爬虫工具。当然这种工具也有一定的局限性，可定制性肯定没有用一些爬虫框架(scrapy等)好(毕竟代码是自己写的，哈哈)。</p>
+<h3 id="使用八爪鱼"><a href="#使用八爪鱼" class="headerlink" title="使用八爪鱼"></a>使用八爪鱼</h3><p>最近，使用八爪鱼爬取了一些微博的热门评论。当然，使用<a href="http://open.weibo.com/wiki/%E5%BE%AE%E5%8D%9AAPI" target="_blank" rel="external">新浪微博API</a>也是可以的。但是，自己为了快嘛，也想了解一下这个工具。<br>八爪鱼软件中基本爬取工作都有教程的。下面，我就以爬取微博热门评论，讲解一下，足以应付八爪鱼的基本使用了。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>八爪鱼目前只有Windows版本，没有Mac版本，所以我在虚拟机中装了一个八爪鱼。<br><a href="http://www.bazhuayu.com/download" target="_blank" rel="external">八爪鱼下载</a>， 下载安装无脑下一步就好了。<br>登陆的时候需要提前注册账号，然后用注册号的账号登录即可。</p>
+<h3 id="爬虫任务配置"><a href="#爬虫任务配置" class="headerlink" title="爬虫任务配置"></a>爬虫任务配置</h3><ol>
+<li>创建任务（高级模式）<br><img src="/image/bazhuayu1.jpg" width="800" height="500" alt="爬取页面" align="center"></li>
+<li>设置基本信息</li>
+<li>设置工作流程（主要参考教程）<br><img src="/image/bazhuayu2.jpg" width="900" height="500" alt="整个任务配置" align="center"><br><img src="/image/bazhuayu3.jpg" width="900" height="500" alt="点击元素设置" align="center"><br><img src="/image/bazhuayu4.jpg" width="900" height="500" alt="点击翻页设置" align="center">  </li>
+</ol>
+<p><strong>说明：</strong>点击元素设置的是点击热门，因为默认是全部评论，所以要先点击一下这个元素。其中，要把“在新标签中打开页面”勾取消掉，然后设置Ajax加载数据，Ajax加载超时设置大概为2秒。这样做的原因在于，微博中全部评论和热门评论的请求用的是Ajax，Ajax的好处就是在不刷新页面的时候进行请求。页面都没有刷新，当然不能在新标签中打开页面。 还有就是因为是Ajax请求，所以一定要设置超时，不然下一步不能检测到变化，就不会进行。<br>点击翻页也是这样设置，设置Ajax超时，时间到了就说明请求结束了，下一步骤才能检测到，然后才能开始。不这样设置的话，会发现爬取了一页然后就不动了，过一会儿就说结束了。<br><strong>总结：</strong> 就是网页中是进行Ajax请求（简单的识别就是点击后页面链接没有变化的时候），就需要进行如此设置。<br><strong>问题：</strong>  1) 如果将找好的评论链接设置为爬虫链接的时候，每次都会跳转到<a href="http://weibo.com/login.php" target="_blank" rel="external">登录页面</a>，那么就在八爪鱼中登录即可。</p>
+<h3 id="爬虫以及导出数据"><a href="#爬虫以及导出数据" class="headerlink" title="爬虫以及导出数据"></a>爬虫以及导出数据</h3><p> <img src="/image/bazhuayu5.jpg" width="900" height="500" alt="爬取结果" align="center"><br>然后右下角有一个导出按钮，可以导出为Text, Html, Excel, 数据库等格式。 </p>
+<p>参考文献：<br><a href="http://www.bazhuayu.com/tutorials" target="_blank" rel="external">八爪鱼官网</a></p>
+
+  </article>
+  <div class="random-toc-area">
+  <button class="btn-hide-toc btn-hide-toc-show" style="display: none" onclick="TOCToggle()">显示目录</button>
+  <button class="btn-hide-toc btn-hide-toc-hide" onclick="TOCToggle()">隐藏目录</button>
+  <div class="random-toc">
+    <h2>目录</h2>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于八爪鱼"><span class="toc-text">关于八爪鱼</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用八爪鱼"><span class="toc-text">使用八爪鱼</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#爬虫任务配置"><span class="toc-text">爬虫任务配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#爬虫以及导出数据"><span class="toc-text">爬虫以及导出数据</span></a></li></ol>
+  </div>
+</div>
+
+  
+<nav id="pagination">
+  
+    <a href="/2016/10/03/Clion下的相对路径/" class="prev">&larr; 上一篇 CLion下的相对路径</a>
+  
+
+  
+
+  
+    <a href="/2016/09/25/vector用法/" class="next">下一篇 C++ STL之vector用法总结 &rarr;</a>
+  
+</nav>
+
+  <!-- JiaThis Button BEGIN -->
+
+<!-- JiaThis Button END -->
+
+
+      
+      <div class="ds-thread" data-thread-key="2016/10/03/用八爪鱼爬取微博热门评论/" data-title="用八爪鱼爬取微博热门评论" data-url="http://yoursite.com/2016/10/03/用八爪鱼爬取微博热门评论/"></div>
+      
+      
+      
+    </div>
+  </div>
+
+  <div id="bottom-outer">
+    <div id="bottom-inner">
+      Site by zhonghuasong using
+      <a href="http://hexo.io">Hexo</a> 
+      <br>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  <script type="text/javascript">
+var duoshuoQuery = {short_name:"mynameischaos"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+   || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+<div id="user-card">
+  <div class="center-field">
+    <img class="avatar" src="/image/dog.jpg">
+    <p id="description">慢慢来比较快</p>
+    <ul class="social-icon">
+  
+  
+    <li>
+      <a href="https://github.com/mynameischaos">
+        
+          <i class="icon iconfont github">&#xe606;</i>
+        
+      </a>
+    </li>
+  
+</ul>
+  </div>
+</div>
+
+
+<div id="btn-view">Hide</div>
+
+<script>
+// is trigger analytics / tongji script
+var isIgnoreHost = false;
+
+if(window && window.location && window.location.host) {
+  isIgnoreHost = ["localhost","127.0.0.1"].some(function(address){
+    return 0 === window.location.host.indexOf(address);
+  });
+}
+
+var isTriggerAnalytics = !( true && isIgnoreHost );
+
+</script>
+
+  <script>
+if(isTriggerAnalytics) {
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?7a290d9537f12cac590017345eb137b4";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+}
+</script>
+
+
+
+
+
+  
+  
+    <script src="/js/jquery-2.2.3.min.js"></script>
+  
+    <script src="/js/vegas.min.js"></script>
+  
+    <script src="/js/random.js"></script>
+  
+    <script src="/js/highlight.pack.js"></script>
+  
+    <script src="/js/jquery.mousewheel.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox-thumbs.js"></script>
+  
+    <script src="/js/plyr.js"></script>
+  
+
+<script>
+
+  // fancybox
+  var backgroundImages = [];
+  
+  $('#post').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox') || $(this).parent().hasClass('fancybox-thumb')) return;
+      var alt = this.alt || this.title;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'post' + i);
+    });
+  });
+  $(".fancybox").fancybox();
+
+var vegasConfig = {"preload­Image":true,"transition":["slideLeft2","slideRight2","flash2"],"timer":true,"delay":10000,"shuffle":true,"count":28};
+var unsplashConfig = {"gravity":"north"};
+// is show background images
+var turnoffBackgroundImage = false;
+
+
+
+  turnoffBackgroundImage = true;
+
+
+var backgroundColor = "D7CCC8";
+
+$(".fancybox-thumb").fancybox({
+  prevEffect: 'none',
+  nextEffect: 'none',
+  helpers: {
+    title: {
+      type: 'outside'
+    },
+    thumbs: {
+      width: 50,
+      height: 50
+    }
+  }
+});
+
+// show video with plyr
+$(".video-container iframe").each(function(i){
+  var url = $(this).attr('src');
+  var id = url.split('/').pop();
+  var plyrContainer = document.createElement('div');
+  plyrContainer.className = 'plyr';
+  var plyrElement = document.createElement('div');
+  plyrElement.dataset.videoId = id;
+  switch(true) {
+    case url.search('youtube.com') >= 0:
+      plyrElement.dataset.type = 'youtube';
+      break;
+    case url.search('vimeo.com') >= 0:
+      plyrElement.dataset.type = 'vimeo';
+      break;
+    default:
+      return;
+  };
+  plyrContainer.appendChild(plyrElement);
+  $(this).parent().html(plyrContainer);
+});
+plyr.setup('.plyr', {iconUrl: '/css/sprite.svg'});
+</script>
+</body>
+</html>
+
