@@ -7,7 +7,7 @@ body{margin:0;padding:0;background:#ffe;font-size:12px;overflow:auto}
 #messages{display:none}
 #elapseClock .digit{font-family:"digit";font-size:36px}
 #loveu{padding:5px;font-size:22px;margin-top:80px;margin-right:120px;text-align:right;display:none}
-#loveu .signature{margin-top:6px;font-size:20px;font-style:italic}
+#loveu .signature{margin-top:10px;font-size:20px;font-style:italic}
 #clickSound{display:none}
 #code{float:left;width:440px;height:400px;color:#333;font-family:"Consolas","Monaco","Bitstream Vera Sans Mono","Courier New","sans-serif";font-size:12px}
 #code .string{color:#2a36ff}
